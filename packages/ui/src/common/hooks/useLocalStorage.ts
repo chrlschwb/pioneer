@@ -42,7 +42,7 @@ export const useLocalStorage = <T>(key?: string) => {
   }, [key])
 
   useEffect(() => {
-    const handleEventOnce = (event: any) => {
+    const handleEventOnce = () => {
       setState(getItem(key))
     }
 
@@ -55,8 +55,8 @@ export const useLocalStorage = <T>(key?: string) => {
   const dispatch = useCallback(
     (setStateAction: T | ((prevState?: T) => T)) => {
       const value = isFunction(setStateAction) ? setStateAction(getItem(key)) : setStateAction
-      setState(value)
       setItem(key, value)
+      document.dispatchEvent(new CustomEvent(`storage_event_${key}`, {}))
     },
     [key]
   )
